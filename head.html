@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小石潭记</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    overflow: hidden; /* 隐藏页面滚动条 */
+  }
+  
+  .container {
+    width: 1920px;
+    height: 1080px;
+    background-image: url('image/1.png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+
+  .text {
+    font-size: 120px;
+    text-align: center;
+    position: absolute;
+    top: 20%; 
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0; /* 初始隐藏 */
+    animation: fadeIn 2.5s forwards; 
+  }
+
+  .text span {
+    display: inline-block;
+    margin: 0 20px; /* 调整字之间的间距 */
+    font-weight: bold;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .fade-in-text {
+    font-size: 45px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    opacity: 0;
+    animation: fadeInText 2.5s 2.5s forwards; 
+  }
+
+  @keyframes fadeInText {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .button {
+    position: absolute;
+    top: 75%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #8B4513;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0; /* 初始隐藏 */
+    animation: fadeInButton 3s 4s forwards;
+  }
+
+  @keyframes fadeInButton {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="text">
+      <span>小</span>
+      <span>石</span>
+      <span>潭</span>
+      <span>记</span>
+    </div>
+    <button class="button">开始进入</button>
+    <div class="fade-in-text">
+      让我们一起探索柳宗元文章的秘密
+    </div>
+  </div>
+
+  <script>
+    // JavaScript代码用于添加按钮点击事件等功能
+    document.querySelector('.button').addEventListener('click', function() {
+      // 在这里添加按钮点击后的功能，比如页面跳转或其他交互操作
+      alert('按钮被点击');
+    });
+  </script>
+</body>
+</html>
