@@ -8,10 +8,12 @@
         body {
             font-family: 'Noto Serif SC', serif;
             background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
-            background-image:url('image/14.jpg') ;
+            background-image:url('image/7.png') ;
+			background-size: cover;
             color: #333;
             line-height: 1.6;
-            background-size: cover;
+            margin: 0;
+            padding: 0;
         }
         .container {
             max-width: 1200px;
@@ -21,11 +23,22 @@
         header {
             text-align: center;
             padding: 50px 0;
+            background: rgba(255, 255, 255, 0.8); /* 添加背景框样式 */
+            border-radius: 10px; /* 圆角 */
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         h1 {
             font-size: 3em;
             color: #006064;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            display: inline-block; /* 让标题元素成为行内块级元素，以便应用背景框 */
+            padding: 10px 20px; /* 调整内边距 */
+            border-radius: 10px; /* 圆角 */
+            margin-bottom: 10px; /* 调整标题与副标题间距 */
+        }
+        p.subtitle {
+            font-size: 1.2em;
         }
         .section {
             background: rgba(255,255,255,0.8);
@@ -67,8 +80,10 @@
 <body>
     <div class="container">
         <header>
-            <h1>小石潭记·AI寻幽记</h1>
-            <p>以AI之眼，探寻文学之美</p>
+            <div>
+                <h1>小石潭记·AI寻幽记</h1>
+                <p class="subtitle">以AI之眼，探寻文学之美</p>
+            </div>
         </header>
 
         <section class="section">
@@ -197,6 +212,5 @@
             }
         }
     </script>
-    </div>
 </body>
 </html>
