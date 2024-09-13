@@ -19,13 +19,17 @@
             padding: 0;
             color: var(--text-color);
             line-height: 1.6;
+            background: url('image/10.png') no-repeat center center fixed;
             background-size: cover;
-            background: url('image/10.png')
+            height: 100vh;
+            overflow: hidden; /* 防止出现滚动条 */
         }
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            position: relative; /* 确保内容层在背景上 */
+            z-index: 1; /* 确保内容层在背景上 */
         }
         .navbar {
             background: linear-gradient(135deg, #2c3e50, #34495e);
@@ -82,6 +86,7 @@
             padding: 100px 0 40px;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1; /* 确保标题层在背景上 */
         }
         h1 {
             margin: 0;
@@ -197,7 +202,7 @@
                 <a href="ceshi3.html">智能问答</a>
                 <a href="ceshi4.html">导游开始</a>
                 <a href="ailzy.html">AI柳宗元</a>
-				<a href="jieshu.html">视频赏析</a>
+                <a href="jieshu.html">视频赏析</a>
             </div>
             <div class="menu-icon" onclick="toggleMenu()">☰</div>
         </div>
@@ -234,7 +239,6 @@
                     <div class="input-group">
                         <input type="text" id="image-prompt" placeholder="描述您想要生成的《小石潭记》场景...">
                         <button onclick="generateImage()">生成图像</button>
-                        
                     </div>
                     <img id="generated-image" src="" alt="生成的图像将显示在这里" style="display: none;">
                 </div>
@@ -335,54 +339,50 @@
         const API_URL1 = 'https://open.bigmodel.cn/api/paas/v4/images/generations';
         const API_KEY1 = '273e56ae66f258aadc7d0a1431ab239c.tKDpOrFaNXM8EGMz';
 
-async function generateImage() {
-    const imagePrompt = document.getElementById('image-prompt').value;
-    const generatedImage = document.getElementById('generated-image');
-    const loadingIndicator = document.getElementById('loading-indicator');
+        async function generateImage() {
+            const imagePrompt = document.getElementById('image-prompt').value;
+            const generatedImage = document.getElementById('generated-image');
 
-    loadingIndicator.style.display = 'block';
-    generatedImage.style.display = 'none';
+            generatedImage.style.display = 'none';
 
-    try {
-        const response = await fetch(API_URL1, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${API_KEY1}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                model: "cogview-2",
-                prompt: imagePrompt,
-                n: 1,
-                size: "1024x1024"
-            })
-        });
+            try {
+                const response = await fetch(API_URL1, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY1}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "cogview-2",
+                        prompt: imagePrompt,
+                        n: 1,
+                        size: "1024x1024"
+                    })
+                });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (data.data && data.data.length > 0 && data.data[0].url) {
+                    generatedImage.src = data.data[0].url;
+                    generatedImage.style.display = 'block';
+                } else {
+                    throw new Error('No image data received');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('图像生成失败，请稍后再试。');
+            }
+
+            document.getElementById('image-prompt').value = '';
         }
 
-        const data = await response.json();
-        if (data.data && data.data.length > 0 && data.data[0].url) {
-            generatedImage.src = data.data[0].url;
-            generatedImage.style.display = 'block';
-        } else {
-            throw new Error('No image data received');
+        function toggleMenu() {
+            var navLinks = document.getElementById("navLinks");
+            navLinks.classList.toggle("active");
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('图像生成失败，请稍后再试。');
-    } finally {
-        loadingIndicator.style.display = 'none';
-    }
-
-    document.getElementById('image-prompt').value = '';
-}
-
-function toggleMenu() {
-    var navLinks = document.getElementById("navLinks");
-    navLinks.classList.toggle("active");
-}
     </script>
 </body>
 </html>
