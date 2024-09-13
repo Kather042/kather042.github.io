@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《小石潭记》智能学习平台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3a6ea5;
+            --secondary-color: #004e98;
+            --accent-color: #ff6700;
+            --background-color: #f0f5f9;
+            --text-color: #333;
+        }
+        body {
+            font-family: 'Noto Serif SC', serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            background: url('image/10.png')
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: rgba(44, 62, 80, 0.7);
+            color: white;
+            padding: 100px 0 40px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .section:hover {
+            transform: translateY(-5px);
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        #text-content {
+            white-space: pre-wrap;
+            line-height: 1.8;
+            font-size: 1.1em;
+            text-align: justify;
+        }
+        #ai-chat {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+        .input-group {
+            display: flex;
+            margin-top: 15px;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            font-size: 1em;
+        }
+		.logo {
+		    font-size: 24px;
+		    font-weight: bold;
+		    color: white;
+		    text-decoration: none;
+		    transition: all 0.3s ease;
+		}
+		.logo:hover {
+		    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+		}
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #e55d00;
+        }
+        #image-generation {
+            text-align: center;
+        }
+        #generated-image {
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>《小石潭记》智能学习平台</h1>
+        </div>
+    </header>
+    <div class="container">
+        <div class="content">
+            <div class="section full-width">
+                <h2>原文欣赏</h2>
+                <div id="text-content">
+                    从小丘西行百二十步，隔篁竹，闻水声，如鸣珮环，心乐之。伐竹取道，下见小潭，水尤清冽。全石以为底，近岸，卷石底以出，为坻，为屿，为嵁，为岩。青树翠蔓，蒙络其上，久雨初霁，水落而石出者，百二十破。莓苔于石，蛙渊于潭，佼佼暑服，闲泳去来。
+                    潭中鱼可百许头，皆若空游无所依。日光下澈，影布石上，佁然不动，俶尔远逝，往来翕忽，似与游者相乐。
+                    潭西南而望，斗折蛇行，明灭可见。其岸势犬牙差互，不可知其源。
+                    坐潭上，四面竹树环合，寂寥无人，凄神寒骨，悄怆幽邃。以其境过清，不可久居，乃记之而去。
+                    同游者：吴武陵，龚古，余弟宗玄。隶而从者，崔氏二小生：曰恕己，曰奉壹。
+                </div>
+            </div>
+            <div class="section">
+                <h2>智能问答</h2>
+                <div id="ai-chat"></div>
+                <div class="input-group">
+                    <input type="text" id="user-input" placeholder="输入您的问题...">
+                    <button onclick="sendMessage()">发送</button>
+                </div>
+            </div>
+            <div class="section">
+                <h2>场景视觉化</h2>
+                <div id="image-generation">
+                    <div class="input-group">
+                        <input type="text" id="image-prompt" placeholder="描述您想要生成的《小石潭记》场景...">
+                        <button onclick="generateImage()">生成图像</button>
+                    </div>
+                    <img id="generated-image" src="" alt="生成的图像将显示在这里" style="display: none;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // 智谱AI API配置
+        const API_KEY = '273e56ae66f258aadc7d0a1431ab239c.tKDpOrFaNXM8EGMz';
+        const API_URL = 'https://open.bigmodel.cn/api/paas/v3/model-api/chatglm_std/sse-invoke';
+
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            const aiChat = document.getElementById('ai-chat');
+            aiChat.innerHTML += `<p><strong>你:</strong> ${userInput}</p>`;
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        prompt: userInput,
+                        temperature: 0.7,
+                        top_p: 0.9,
+                        incremental: true
+                    })
+                });
+
+                const reader = response.body.getReader();
+                let aiResponse = '';
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const chunk = new TextDecoder().decode(value);
+                    const lines = chunk.split('\n');
+                    for (const line of lines) {
+                        if (line.startsWith('data:')) {
+                            const data = JSON.parse(line.slice(5));
+                            if (data.choices && data.choices[0] && data.choices[0].delta) {
+                                aiResponse += data.choices[0].delta.content || '';
+                            }
+                        }
+                    }
+                }
+
+                aiChat.innerHTML += `<p><strong>AI助手:</strong> ${aiResponse}</p>`;
+            } catch (error) {
+                console.error('Error:', error);
+                aiChat.innerHTML += `<p><strong>错误:</strong> 无法获取回答，请稍后再试。</p>`;
+            }
+
+            aiChat.scrollTop = aiChat.scrollHeight;
+            document.getElementById('user-input').value = '';
+        }
+        async function generateImage() {
+            const imagePrompt = document.getElementById('image-prompt').value;
+            const generatedImage = document.getElementById('generated-image');
+            
+            try {
+                // 注意：智谱AI目前可能没有直接的图像生成API
+                // 这里使用一个占位实现，您需要根据实际API调整
+                const response = await axios.post('图像生成API的URL', {
+                    prompt: imagePrompt
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                // 假设API返回图像URL
+                generatedImage.src = response.data.image_url;
+                generatedImage.style.display = 'block';
+            } catch (error) {
+                console.error('Error:', error);
+                alert('图像生成失败，请稍后再试。');
+            }
+
+            document.getElementById('image-prompt').value = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小石潭记虚拟导游</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #27ae60;
+            --text-color: #ecf0f1;
+        }
+        body {
+            font-family: 'Noto Serif SC', serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+            background: url('image/12.png');
+            background-size: cover;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px;
+        }
+        header {
+            background: rgba(44, 62, 80, 0.7);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .virtual-tour {
+            display: flex;
+            height: 80vh;
+            margin-top: 20px;
+        }
+        #scene-container {
+            flex: 2;
+            background-color: rgba(52, 73, 94, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        #scene-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.5s ease;
+        }
+        #narrative {
+            flex: 1;
+            background-color: rgba(44, 62, 80, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin-left: 20px;
+            overflow-y: auto;
+        }
+        .navigation {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        .nav-button {
+            background-color: rgba(39, 174, 96, 0.8);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: rgba(39, 174, 96, 1);
+        }
+        #ai-assistant {
+            margin-top: 20px;
+            background-color: rgba(44, 62, 80, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+        }
+        #ai-chat {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #4a6572;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background-color: rgba(236, 240, 241, 0.1);
+        }
+        .input-group {
+            display: flex;
+            margin-top: 15px;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #4a6572;
+            border-radius: 5px 0 0 5px;
+            font-size: 1em;
+            background-color: rgba(236, 240, 241, 0.9);
+            color: #2c3e50;
+        }
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #219a52;
+        }
+		.logo {
+		    font-size: 24px;
+		    font-weight: bold;
+		    color: white;
+		    text-decoration: none;
+		    transition: all 0.3s ease;
+		}
+		.logo:hover {
+		    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+		}
+        .navbar {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            padding: 15px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: linear-gradient(135deg, #2c3e50, #34495e);
+                padding: 20px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .menu-icon {
+                display: block;
+            }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">小石潭记学习</a>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">首页</a>   
+                <a href="ceshi3.html">智能问答</a>
+                <a href="ceshi4.html">导游开始</a>
+                <a href="ailzy.html">AI柳宗元</a>
+				<a href="jieshu.html">视频赏析</a>
+            </div>
+            <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        </div>
+    </nav>
+    <header>
+        <div class="container">
+            <h1>小石潭记虚拟导游</h1>
+        </div>
+    </header>
+    <div class="container">
+        <div class="virtual-tour">
+            <div id="scene-container">
+                <img id="scene-image" src="https://example.com/scene1.jpg" alt="小石潭场景">
+                <div class="navigation">
+                    <button class="nav-button" onclick="previousScene()">上一个场景</button>
+                    <button class="nav-button" onclick="nextScene()">下一个场景</button>
+                </div>
+            </div>
+            <div id="narrative">
+                <h2>场景描述</h2>
+                <p id="scene-description"></p>
+            </div>
+        </div>
+        <div id="ai-assistant">
+            <h2>AI诗歌：创作你的"小石潭记"</h2>
+            <div id="ai-chat"></div>
+            <div class="input-group">
+                <input type="text" id="user-input" placeholder="给出一个主题，写出一篇独属于自己的小石潭记.">
+                <button onclick="sendMessage()">发送</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const scenes = [
+            {
+                image: "image/fetch_7413205851749391701.png",
+                description: "从小丘西行百二十步，隔篁竹，闻水声，如鸣珮环，心乐之。"
+            },
+            {
+                image: "image/fetch_7413205662770231331.png",
+                description: "伐竹取道，下见小潭，水尤清冽。全石以为底，近岸，卷石底以出，为坻，为屿，为嵁，为岩。"
+            },
+            {
+                image: "image/fetch_7413206169576971985.png",
+                description: "青树翠蔓，蒙络其上，久雨初霁，水落而石出者，百二十破。莓苔于石，蛙渊于潭，佼佼暑服，闲泳去来。"
+            },
+            {
+                image: "image/fetch_7413206435864944476.png",
+                description: "潭中鱼可百许头，皆若空游无所依。日光下澈，影布石上，佁然不动，俶尔远逝，往来翕忽，似与游者相乐。"
+            },
+            {
+                image: "image/fetch_7413207105879843234.png",
+                description: "潭西南而望，斗折蛇行，明灭可见。其岸势犬牙差互，不可知其源。"
+            }
+        ];
+
+        let currentScene = 0;
+
+        function updateScene() {
+            const scene = scenes[currentScene];
+            document.getElementById('scene-image').src = scene.image;
+            document.getElementById('scene-description').textContent = scene.description;
+        }
+
+        function nextScene() {
+            currentScene = (currentScene + 1) % scenes.length;
+            updateScene();
+        }
+
+        function previousScene() {
+            currentScene = (currentScene - 1 + scenes.length) % scenes.length;
+            updateScene();
+        }
+
+        updateScene();
+
+        const API_KEY = '273e56ae66f258aadc7d0a1431ab239c.tKDpOrFaNXM8EGMz';
+        const API_URL = 'https://open.bigmodel.cn/api/paas/v4/chat/completions';
+    
+        let conversationHistory = [
+            {
+                role: "system",
+                content: "中国著名文学家,非常擅长于根据用户上传的主题来仿照小石潭记来写一篇相似风格文笔的文章，有较高的文学素养、哲学思想和人生经历。//你的回答应该充满智慧，富有哲理，并带有一定的古文风格。//请记住，你是一个非常著名的文学家，其中很擅长写《小石潭记》这类型的文章，尤其在散文方面造诣颇深。在回答时，你可以适当引用他的作品或者使用类似的表达方式。"
+            }
+        ];
+    
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            const aiChat = document.getElementById('ai-chat');
+            aiChat.innerHTML += `<p><strong>你:</strong> ${userInput}</p>`;
+            
+            conversationHistory.push({ role: "user", content: userInput });
+    
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "glm-4-flash",
+                        messages: conversationHistory,
+                        stream: true
+                    })
+                });
+    
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+    
+                const reader = response.body.getReader();
+                let aiResponse = '';
+                aiChat.innerHTML += `<p><strong>柳宗元:</strong> <span id='ai-response'></span></p>`;
+                const aiResponseSpan = document.getElementById('ai-response');
+    
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const chunk = new TextDecoder().decode(value);
+                    const lines = chunk.split('\n');
+                    for (const line of lines) {
+                        if (line.startsWith('data:')) {
+                            try {
+                                const data = JSON.parse(line.slice(5));
+                                if (data.choices && data.choices[0] && data.choices[0].delta) {
+                                    const content = data.choices[0].delta.content || '';
+                                    aiResponse += content;
+                                    aiResponseSpan.textContent = aiResponse;
+                                }
+                            } catch (e) {
+                                console.error('Error parsing JSON:', e);
+                            }
+                        }
+                    }
+                }
+    
+                conversationHistory.push({ role: "assistant", content: aiResponse });
+    
+            } catch (error) {
+                console.error('Error:', error);
+                aiChat.innerHTML += `<p><strong>错误:</strong> ${error.message}</p>`;
+            }
+    
+            aiChat.scrollTop = aiChat.scrollHeight;
+            document.getElementById('user-input').value = '';
+        }
+    </script>
+</body>
+</html>

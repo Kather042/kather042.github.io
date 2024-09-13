@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频播放页面</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('image/7.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        .video-container {
+            position: relative;
+            width: 80%; /* 调整为适当的宽度 */
+            background-color: rgba(255, 255, 255, 0.9); /* 半透明白色背景 */
+            border-radius: 10px; /* 圆角 */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* 阴影效果 */
+            overflow: hidden;
+        }
+        video {
+            width: 100%; /* 视频宽度自适应容器 */
+            height: auto; /* 高度自适应宽度 */
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video controls>
+            <source src="image/shipin.mp4" type="video/mp4">
+        </video>
+    </div>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>柳宗元 - 沉浸式《小石潭记》学习</title>
+    <style>
+		.navbar {
+		    background: linear-gradient(135deg, #2c3e50, #34495e);
+		    padding: 15px 0;
+		    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		    position: fixed;
+		    width: 100%;
+		    top: 0;
+		    z-index: 1000;
+		}
+		
+		.nav-container {
+		    max-width: 1200px;
+		    margin: 0 auto;
+		    padding: 0 20px;
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		}
+		
+		.nav-links {
+		    display: flex;
+		    gap: 20px;
+		}
+		
+		.nav-links a {
+		    color: white;
+		    text-decoration: none;
+		    font-size: 16px;
+		    padding: 8px 12px;
+		    border-radius: 5px;
+		    transition: all 0.3s ease;
+		}
+		
+		.nav-links a:hover {
+		    background-color: rgba(255, 255, 255, 0.2);
+		    transform: translateY(-2px);
+		}
+		
+		.menu-icon {
+		    display: none;
+		    font-size: 24px;
+		    cursor: pointer;
+		}
+		
+		@media (max-width: 768px) {
+		    .nav-links {
+		        display: none;
+		        flex-direction: column;
+		        position: absolute;
+		        top: 70px;
+		        left: 0;
+		        right: 0;
+		        background: linear-gradient(135deg, #2c3e50, #34495e);
+		        padding: 20px;
+		        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		    }
+		    .nav-links.active {
+		        display: flex;
+		    }
+		    .menu-icon {
+		        display: block;
+		    }
+		}
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: url('image/6.png') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            color: #2c3e50;
+        }
+        header {
+            background: rgba(44, 62, 80, 0.7);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .container {
+            display: flex;
+            height: calc(100vh - 80px); /* Adjust height considering header height */
+            margin-top: 80px; /* Space for fixed header */
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+        }
+        .left-panel {
+            width: 50%;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .lesson-content {
+            font-size: 18px;
+            line-height: 1.8;
+            text-align: justify;
+        }
+       .lesson-content h1 {
+       	font-size: 34px;
+       	text-align: center;
+       	margin-bottom: 20px;
+       	color: #ffffff;
+       	padding: 10px;
+ 
+       }
+       .lesson-content p {
+           margin: 0;
+           padding: 3px;
+           line-height: 1.4;
+           background: rgba(255, 255, 255, 0.6);
+           border-radius: 3px;
+           transition: all 0.3s ease;
+           font-size: 18px; 
+		   font-weight: bold;
+       }
+
+		.logo {
+		    font-size: 24px;
+		    font-weight: bold;
+		    color: white;
+		    text-decoration: none;
+		    transition: all 0.3s ease;
+		}
+		.logo:hover {
+		    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+		}
+        .dynamic-visual {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .dynamic-visual img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+        }
+        .right-panel {
+            width: 50%;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-box {
+            height: 70%;
+            padding: 20px;
+            overflow-y: scroll;
+            background: rgba(240, 245, 249, 0.8); /* Lower opacity */
+            border-radius: 10px;
+        }
+        .message {
+            margin-bottom: 15px;
+        }
+        .message.user {
+            text-align: right;
+            color: #2d3436;
+            font-style: italic;
+        }
+        .message.ai {
+            text-align: left;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .input-box {
+            display: flex;
+            margin-top: 15px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 15px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>与原作者对话 - 沉浸式《小石潭记》学习</h1>
+    </header>
+	<nav class="navbar">
+	    <div class="nav-container">
+	        <a href="#" class="logo">小石潭记学习</a>
+	        <div class="nav-links" id="navLinks">
+	            <a href="index.html">首页</a>
+	            <a href="ceshi3.html">智能问答</a>
+	            <a href="ceshi4.html">导游开始</a>
+	            <a href="ailzy.html">AI柳宗元</a>
+	            <a href="jieshu.html">视频赏析</a>
+	        </div>
+	        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+	    </div>
+	</nav>
+
+    <div class="container">
+        <div class="left-panel">
+            <div class="lesson-content">
+                <h1>AI-柳宗元</h1>
+                <p>与AI扮演的"柳宗元"对话，探讨创作灵感和生平趣事 让我们来一场跨越古今的奇妙之旅吧</p>
+                <p>大家可以在右侧与“柳宗元”交谈</p>
+            </div>
+            <div class="dynamic-visual">      
+                <img src="image/OIP.jpg" alt="柳宗元">
+            </div>
+        </div>
+        <div class="right-panel">
+            <div class="chat-box" id="ai-chat"></div>
+            <div class="input-box">
+                <input type="text" id="user-input" placeholder="你好啊同学，你有什么想问的或者想告诉我的吗？...">
+                <button onclick="sendMessage()">发送</button>
+            </div>
+        </div>
+    </div>
+    <script>
+		function toggleMenu() {
+		    const navLinks = document.getElementById('navLinks');
+		    navLinks.classList.toggle('active');
+		}
+
+        const API_KEY = '273e56ae66f258aadc7d0a1431ab239c.tKDpOrFaNXM8EGMz';
+        const API_URL = 'https://open.bigmodel.cn/api/paas/v4/chat/completions';
+
+        let conversationHistory = [
+            {
+                role: "system",
+                content: "你现在要扮演中国唐代著名文学家、哲学家柳宗元。你要以柳宗元的口吻和风格回答问题，体现出他的文学素养、哲学思想和人生经历。你的回答应该充满智慧，富有哲理，并带有一定的古文风格。请记住，柳宗元是'永州八记'的作者，其中包括《小石潭记》。他也是唐宋八大家之一，擅长诗文创作，尤其在散文方面造诣颇深。在回答时，你可以适当引用他的作品或者使用类似的表达方式。"
+            }
+        ];
+
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            const aiChat = document.getElementById('ai-chat');
+            aiChat.innerHTML += `<p><strong>你:</strong> ${userInput}</p>`;
+
+            conversationHistory.push({ role: "user", content: userInput });
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "glm-4-flash",
+                        messages: conversationHistory
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const responseJson = await response.json();
+                const aiResponse = responseJson.choices[0].message.content || '';
+                aiChat.innerHTML += `<p><strong>柳宗元:</strong> ${aiResponse}</p>`;
+
+                conversationHistory.push({ role: "assistant", content: aiResponse });
+
+            } catch (error) {
+                console.error('Error:', error);
+                aiChat.innerHTML += `<p><strong>错误:</strong> ${error.message}</p>`;
+            }
+
+            aiChat.scrollTop = aiChat.scrollHeight;
+            document.getElementById('user-input').value = '';
+        }
+    </script>
+</body>
+</html>

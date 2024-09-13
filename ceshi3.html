@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《小石潭记》智能学习平台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #27ae60;
+            --text-color: #ecf0f1;
+            --active-color: #16a085;
+        }
+        body {
+            font-family: 'Noto Serif SC', serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-size: cover;
+            background: url('image/10.png')
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            padding: 15px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .logo:hover {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .menu-icon {
+            display: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        header {
+            background: rgba(44, 62, 80, 0.7);
+            color: white;
+            padding: 100px 0 40px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .section {
+            background-color: rgba(52, 73, 94, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        h2 {
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        #text-content {
+            white-space: pre-wrap;
+            line-height: 1.8;
+            font-size: 1.1em;
+            text-align: justify;
+        }
+        #ai-chat {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #4a6572;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background-color: rgba(44, 62, 80, 0.6);
+        }
+        .input-group {
+            display: flex;
+            margin-top: 15px;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #4a6572;
+            border-radius: 5px 0 0 5px;
+            font-size: 1em;
+            background-color: rgba(236, 240, 241, 0.9);
+            color: #2c3e50;
+        }
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #219a52;
+        }
+        #image-generation {
+            text-align: center;
+        }
+        #generated-image {
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: linear-gradient(135deg, #2c3e50, #34495e);
+                padding: 20px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .menu-icon {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">小石潭记学习</a>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">首页</a>   
+                <a href="ceshi3.html">智能问答</a>
+                <a href="ceshi4.html">导游开始</a>
+                <a href="ailzy.html">AI柳宗元</a>
+				<a href="jieshu.html">视频赏析</a>
+            </div>
+            <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container">
+            <h1>《小石潭记》智能学习平台</h1>
+        </div>
+    </header>
+    <div class="container">
+        <div class="content">
+            <div class="section full-width" id="text">
+                <h2>原文欣赏</h2>
+                <div id="text-content">
+                    从小丘西行百二十步，隔篁竹，闻水声，如鸣珮环，心乐之。伐竹取道，下见小潭，水尤清冽。全石以为底，近岸，卷石底以出，为坻，为屿，为嵁，为岩。青树翠蔓，蒙络其上，久雨初霁，水落而石出者，百二十破。莓苔于石，蛙渊于潭，佼佼暑服，闲泳去来。
+                    潭中鱼可百许头，皆若空游无所依。日光下澈，影布石上，佁然不动，俶尔远逝，往来翕忽，似与游者相乐。
+                    潭西南而望，斗折蛇行，明灭可见。其岸势犬牙差互，不可知其源。
+                    坐潭上，四面竹树环合，寂寥无人，凄神寒骨，悄怆幽邃。以其境过清，不可久居，乃记之而去。
+                    同游者：吴武陵，龚古，余弟宗玄。隶而从者，崔氏二小生：曰恕己，曰奉壹。
+                </div>
+            </div>
+            <div class="section" id="qa">
+                <h2>智能问答</h2>
+                <div id="ai-chat"></div>
+                <div class="input-group">
+                    <input type="text" id="user-input" placeholder="输入您的问题...">
+                    <button onclick="sendMessage()">发送</button>
+                </div>
+            </div>
+            <div class="section" id="image">
+                <h2>场景视觉化</h2>
+                <div id="image-generation">
+                    <div class="input-group">
+                        <input type="text" id="image-prompt" placeholder="描述您想要生成的《小石潭记》场景...">
+                        <button onclick="generateImage()">生成图像</button>
+                        
+                    </div>
+                    <img id="generated-image" src="" alt="生成的图像将显示在这里" style="display: none;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 根据当前页面URL设置导航栏激活状态
+        window.onload = function() {
+            const links = document.querySelectorAll('.nav-links a');
+            const currentPath = window.location.href;
+
+            links.forEach(link => {
+                if (currentPath.includes(link.getAttribute('href'))) {
+                    link.classList.add('active');
+                }
+            });
+        };
+
+        function toggleMenu() {
+            var navLinks = document.getElementById("navLinks");
+            navLinks.classList.toggle("active");
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // 智谱AI API配置
+        const API_KEY = '273e56ae66f258aadc7d0a1431ab239c.tKDpOrFaNXM8EGMz';
+        const API_URL = 'https://open.bigmodel.cn/api/paas/v4/chat/completions';
+
+        let conversationHistory = [];
+
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            const aiChat = document.getElementById('ai-chat');
+            aiChat.innerHTML += `<p><strong>你:</strong> ${userInput}</p>`;
+            
+            conversationHistory.push({ role: "user", content: userInput });
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "glm-4-flash",
+                        messages: conversationHistory,
+                        stream: true
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const reader = response.body.getReader();
+                let aiResponse = '';
+                aiChat.innerHTML += `<p><strong>AI助手:</strong> <span id="ai-response"></span></p>`;
+                const aiResponseSpan = document.getElementById('ai-response');
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const chunk = new TextDecoder().decode(value);
+                    const lines = chunk.split('\n');
+                    for (const line of lines) {
+                        if (line.startsWith('data:')) {
+                            try {
+                                const data = JSON.parse(line.slice(5));
+                                if (data.choices && data.choices[0] && data.choices[0].delta) {
+                                    const content = data.choices[0].delta.content || '';
+                                    aiResponse += content;
+                                    aiResponseSpan.textContent = aiResponse;
+                                }
+                            } catch (e) {
+                                console.error('Error parsing JSON:', e);
+                            }
+                        }
+                    }
+                }
+
+                conversationHistory.push({ role: "assistant", content: aiResponse });
+
+            } catch (error) {
+                console.error('Error:', error);
+                aiChat.innerHTML += `<p><strong>错误:</strong> ${error.message}</p>`;
+            }
+
+            aiChat.scrollTop = aiChat.scrollHeight;
+            document.getElementById('user-input').value = '';
+        }
+        
+
+        const API_URL1 = 'https://open.bigmodel.cn/api/paas/v4/images/generations';
+        const API_KEY1 = '273e56ae66f258aadc7d0a1431ab239c.tKDpOrFaNXM8EGMz';
+
+async function generateImage() {
+    const imagePrompt = document.getElementById('image-prompt').value;
+    const generatedImage = document.getElementById('generated-image');
+    const loadingIndicator = document.getElementById('loading-indicator');
+
+    loadingIndicator.style.display = 'block';
+    generatedImage.style.display = 'none';
+
+    try {
+        const response = await fetch(API_URL1, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${API_KEY1}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: "cogview-2",
+                prompt: imagePrompt,
+                n: 1,
+                size: "1024x1024"
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data.data && data.data.length > 0 && data.data[0].url) {
+            generatedImage.src = data.data[0].url;
+            generatedImage.style.display = 'block';
+        } else {
+            throw new Error('No image data received');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('图像生成失败，请稍后再试。');
+    } finally {
+        loadingIndicator.style.display = 'none';
+    }
+
+    document.getElementById('image-prompt').value = '';
+}
+
+function toggleMenu() {
+    var navLinks = document.getElementById("navLinks");
+    navLinks.classList.toggle("active");
+}
+    </script>
+</body>
+</html>
